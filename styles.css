@@ -45,6 +45,3 @@ p {
 }
 
 a { color: white; text-decoration: underline; }
-
-/* small helper so a fixed UI later will sit above content if you add it */
-#controls { position: fixed; right: 16px; bottom: 16px; }

@@ -46,29 +46,5 @@ p {
 
 a { color: white; text-decoration: underline; }
 
-/* Controls bar */
-#controls {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  background: rgba(255,255,255,0.08);
-  padding: 10px 12px;
-  border-radius: 10px;
-  backdrop-filter: blur(6px);
-}
-#controls button, #controls input {
-  font: inherit;
-}
-#controls button {
-  padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: transparent;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
-#controls label { font-size: 14px; opacity: 0.9; }
-#controls input[type="range"] { width: 120px; }
+/* small helper so a fixed UI later will sit above content if you add it */
+#controls { position: fixed; right: 16px; bottom: 16px; }

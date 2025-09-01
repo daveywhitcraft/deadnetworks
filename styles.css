@@ -36,3 +36,6 @@ p {
   margin: 0 auto 24px;
 }
 a { color: white; text-decoration: underline; }
+
+html { scroll-behavior: auto; }
+

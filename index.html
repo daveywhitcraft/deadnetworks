@@ -1,23 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Dead Networks</title>
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="./favicon.ico" type="image/x-icon" />
 </head>
 <body>
 
   <div id="container">
-    <!-- Keep all your entries here exactly as before -->
+    <!-- paste ALL your entries here exactly as you have them -->
     <div class="entry">
       <h2><a href="https://en.wikipedia.org/wiki/Bastn%C3%A4s" style="color: white; text-decoration: underline;" target="_blank">Bastnäs, Sweden</a></h2>
       <time>1830s–1900s</time>
       <p>Site of one of the earliest rare earth mineral discoveries; cradle of lanthanide extraction in Europe.</p>
     </div>
 
-    <!-- ... all other entries ... -->
+    <!-- ... keep every entry ... -->
 
     <div class="entry">
       <h2><a href="https://en.wikipedia.org/wiki/Massachusetts_Memory_Project" style="color: white; text-decoration: underline;" target="_blank">Massachusetts Memory Project, Boston</a></h2>
@@ -26,15 +26,8 @@
     </div>
   </div>
 
-  <!-- Controls bar -->
-  <div id="controls">
-    <button id="toggle">Pause</button>
-    <label>Speed
-      <input type="range" id="speed" min="0.1" max="3" step="0.1" value="0.6">
-    </label>
-  </div>
-
   <script>
+    // 1) sort entries by first year
     window.addEventListener('load', () => {
       const container = document.getElementById('container');
       const items = Array.from(container.querySelectorAll('.entry'));
@@ -48,45 +41,29 @@
       });
       container.innerHTML = '';
       items.forEach(el => container.appendChild(el));
+    });
 
+    // 2) super-stable auto-scroll using requestAnimationFrame
+    (function () {
       const root =
         document.scrollingElement ||
         document.documentElement ||
         document.body;
 
-      const speedInput = document.getElementById('speed');
-      const toggleBtn  = document.getElementById('toggle');
+      let step = 0.6; // pixels per frame; change to taste
 
-      let step = parseFloat(speedInput.value);
-      let paused = false;
-      let pauseUntil = 0;
-
-      speedInput.addEventListener('input', () => {
-        step = parseFloat(speedInput.value);
-      });
-
-      toggleBtn.addEventListener('click', () => {
-        paused = !paused;
-        toggleBtn.textContent = paused ? 'Resume' : 'Pause';
-      });
-
-      ['wheel','touchstart','touchmove','keydown'].forEach(evt => {
-        window.addEventListener(evt, () => { pauseUntil = performance.now() + 1200; }, { passive: true });
-      });
-
-      function tick() {
-        const now = performance.now();
+      function loop() {
         const max = root.scrollHeight - window.innerHeight;
-
-        if (!paused && max > 0 && now >= pauseUntil) {
+        if (max > 0) {
           let next = root.scrollTop + step;
           if (next >= max) next = 0;
           root.scrollTop = next;
         }
+        requestAnimationFrame(loop);
       }
 
-      setInterval(tick, 16); // ~60 fps
-    });
+      window.addEventListener('load', () => requestAnimationFrame(loop));
+    })();
   </script>
 
 </body>

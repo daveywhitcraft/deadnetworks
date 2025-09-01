@@ -26,42 +26,31 @@
 
   </div>
 
-  <script>
+ <script>
   window.addEventListener('load', () => {
-    const container = document.getElementById('container');
-
-    // sort entries by first year found in <time>
-    const entries = Array.from(container.querySelectorAll('.entry'));
-    container.innerHTML = '';
-    entries.sort((a, b) => {
-      const getYear = el => {
-        const text = el.querySelector('time')?.textContent || '';
-        const match = text.match(/(\d{4})/);
-        return match ? parseInt(match[1], 10) : Number.POSITIVE_INFINITY;
-      };
-      return getYear(a) - getYear(b);
-    });
-    entries.forEach(entry => container.appendChild(entry));
-
-    // smooth continuous auto-scroll
     const el = document.scrollingElement || document.documentElement;
-    let y = 0;
-    const stepPx = 0.5;
+    const step = 0.6;          // pixels per frame
+    let pausedUntil = 0;       // pause briefly after user input
+
+    // optional: pause when the user scrolls or touches
+    ['wheel','touchstart','touchmove','keydown'].forEach(evt => {
+      window.addEventListener(evt, () => { pausedUntil = performance.now() + 1200; }, { passive: true });
+    });
 
     function tick() {
-      // if the user moved the page, sync and continue
-      if (Math.abs(el.scrollTop - y) > 1) y = el.scrollTop;
-
-      y += stepPx;
-      if (y + window.innerHeight >= el.scrollHeight) {
-        y = 0;
+      const now = performance.now();
+      if (now >= pausedUntil) {
+        const max = el.scrollHeight - window.innerHeight;
+        let next = el.scrollTop + step;
+        if (next >= max) next = 0;   // wrap to top
+        el.scrollTop = next;
       }
-      el.scrollTop = y;
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
   });
-  </script>
+</script>
+
 
 </body>
 </html>

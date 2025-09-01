@@ -1,10 +1,11 @@
+/* base */
 html { scroll-behavior: auto; }
 
 html, body {
   min-height: 100vh;
   overflow-y: scroll;
-  background-color: black;
-  color: white;
+  background-color: #000;
+  color: #fff;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -12,18 +13,21 @@ html, body {
   overscroll-behavior: none;
 }
 
+/* layout */
 #container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* entries */
 .entry {
   max-width: 900px;
   padding: 16px 24px;
   margin: 0 auto 24px;
 }
 
+/* headings */
 h2 {
   font-size: 6vw;
   line-height: 1.2;
@@ -33,6 +37,7 @@ h2 {
   margin-bottom: 1vh;
 }
 
+/* meta + text */
 time {
   display: block;
   opacity: 0.8;
@@ -45,4 +50,19 @@ p {
   margin: 0 auto;
 }
 
-a { color: white; text-decoration: underline; }
+/* links */
+a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* small screens */
+@media (max-width: 600px) {
+  .entry { padding: 12px 16px; }
+  p { font-size: 16px; }
+}
+
+/* large screens */
+@media (min-width: 1400px) {
+  h2 { font-size: 84px; }
+}

@@ -1,30 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dead Networks</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
 
   <div id="container">
-    <!-- Your entries start -->
+    <!-- paste ALL your entries here exactly as you have them -->
     <div class="entry">
       <h2><a href="https://en.wikipedia.org/wiki/Bastn%C3%A4s" style="color: white; text-decoration: underline;" target="_blank">Bastnäs, Sweden</a></h2>
       <time>1830s–1900s</time>
       <p>Site of one of the earliest rare earth mineral discoveries; cradle of lanthanide extraction in Europe.</p>
     </div>
 
-    <!-- keep all the entries you pasted earlier, unchanged -->
-    <!-- for brevity, I show only the last one here -->
+    <!-- ... all your entries ... -->
 
     <div class="entry">
       <h2><a href="https://en.wikipedia.org/wiki/Massachusetts_Memory_Project" style="color: white; text-decoration: underline;" target="_blank">Massachusetts Memory Project, Boston</a></h2>
       <time>1997–2008</time>
       <p>Statewide Archival Server: Hosted digital scans of town records, maps, and oral histories; absorbed into library networks.</p>
     </div>
-    <!-- Your entries end -->
   </div>
 
   <script>
@@ -42,37 +40,31 @@
       });
       container.innerHTML = '';
       items.forEach(el => container.appendChild(el));
-    });
 
-    // smooth auto-scroll, interval-based, resilient
-    (function () {
-      const root =
-        document.scrollingElement ||
-        document.documentElement ||
-        document.body;
+      // robust auto-scroll with accumulator
+      let acc = 0;            // subpixel accumulator
+      const pxPerFrame = 0.6; // feel free to change
 
-      const step = 0.6;        // pixels per tick, adjust to taste
-      const every = 16;        // ms per tick (~60fps)
-      let pauseUntil = 0;
+      function step() {
+        const doc = document.documentElement;
+        const y = window.pageYOffset || doc.scrollTop || 0;
+        const max = (doc.scrollHeight || 0) - window.innerHeight;
 
-      // short pause after user input
-      ['wheel','touchstart','touchmove','keydown'].forEach(evt => {
-        window.addEventListener(evt, () => { pauseUntil = performance.now() + 1200; }, { passive: true });
-      });
-
-      function tick() {
-        const now = performance.now();
-        const max = root.scrollHeight - window.innerHeight;
-
-        if (max > 0 && now >= pauseUntil) {
-          let next = root.scrollTop + step;
-          if (next >= max) next = 0;
-          root.scrollTop = next;
+        if (max > 0) {
+          acc += pxPerFrame;
+          const whole = Math.floor(acc);
+          if (whole >= 1) {
+            let next = y + whole;
+            if (next >= max) next = 0;
+            window.scrollTo(0, next);
+            acc -= whole;
+          }
         }
+        requestAnimationFrame(step);
       }
 
-      setInterval(tick, every);
-    })();
+      requestAnimationFrame(step);
+    });
   </script>
 
 </body>

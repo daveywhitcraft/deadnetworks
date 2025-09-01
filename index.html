@@ -1,71 +1,34 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dead Networks</title>
-  <link rel="stylesheet" href="./styles.css" />
-</head>
-<body>
-
-  <div id="container">
-    <!-- paste ALL your entries here exactly as you have them -->
-    <div class="entry">
-      <h2><a href="https://en.wikipedia.org/wiki/Bastn%C3%A4s" style="color: white; text-decoration: underline;" target="_blank">Bastnäs, Sweden</a></h2>
-      <time>1830s–1900s</time>
-      <p>Site of one of the earliest rare earth mineral discoveries; cradle of lanthanide extraction in Europe.</p>
-    </div>
-
-    <!-- ... all your entries ... -->
-
-    <div class="entry">
-      <h2><a href="https://en.wikipedia.org/wiki/Massachusetts_Memory_Project" style="color: white; text-decoration: underline;" target="_blank">Massachusetts Memory Project, Boston</a></h2>
-      <time>1997–2008</time>
-      <p>Statewide Archival Server: Hosted digital scans of town records, maps, and oral histories; absorbed into library networks.</p>
-    </div>
-  </div>
-
-  <script>
-    // sort entries by first year in <time>
-    window.addEventListener('load', () => {
-      const container = document.getElementById('container');
-      const items = Array.from(container.querySelectorAll('.entry'));
-      items.sort((a, b) => {
-        const year = el => {
-          const text = el.querySelector('time')?.textContent || '';
-          const m = text.match(/(\d{4})/);
-          return m ? parseInt(m[1], 10) : Number.POSITIVE_INFINITY;
-        };
-        return year(a) - year(b);
-      });
-      container.innerHTML = '';
-      items.forEach(el => container.appendChild(el));
-
-      // robust auto-scroll with accumulator
-      let acc = 0;            // subpixel accumulator
-      const pxPerFrame = 0.6; // feel free to change
-
-      function step() {
-        const doc = document.documentElement;
-        const y = window.pageYOffset || doc.scrollTop || 0;
-        const max = (doc.scrollHeight || 0) - window.innerHeight;
-
-        if (max > 0) {
-          acc += pxPerFrame;
-          const whole = Math.floor(acc);
-          if (whole >= 1) {
-            let next = y + whole;
-            if (next >= max) next = 0;
-            window.scrollTo(0, next);
-            acc -= whole;
-          }
-        }
-        requestAnimationFrame(step);
-      }
-
-      requestAnimationFrame(step);
+<script>
+  window.addEventListener('load', () => {
+    // sort entries by year
+    const container = document.getElementById('container');
+    const items = Array.from(container.querySelectorAll('.entry'));
+    items.sort((a, b) => {
+      const year = el => {
+        const text = el.querySelector('time')?.textContent || '';
+        const m = text.match(/(\d{4})/);
+        return m ? parseInt(m[1], 10) : Number.POSITIVE_INFINITY;
+      };
+      return year(a) - year(b);
     });
-  </script>
+    container.innerHTML = '';
+    items.forEach(el => container.appendChild(el));
 
-</body>
-</html>
+    // auto-scroll
+    let speed = 0.6; // pixels per frame
+    function loop() {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      const max = document.body.scrollHeight - window.innerHeight;
+
+      let next = y + speed;
+      if (next >= max) {
+        next = 0; // reset to top
+      }
+      window.scrollTo(0, next);
+
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+  });
+</script>
